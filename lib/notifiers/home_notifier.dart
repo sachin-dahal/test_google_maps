@@ -6,6 +6,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class HomeNotifier extends ChangeNotifier {
   Completer<GoogleMapController> _controller = Completer();
   final List<Marker> markers = [];
+  bool isSatelliteView = false;
+  MapType mapType = MapType.normal;
 
   final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
@@ -27,7 +29,7 @@ class HomeNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void goLake() async {
+  void goLoc() async {
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newLatLng(_kLoc.target));
     addMarker(_kLoc.target);
@@ -41,10 +43,31 @@ class HomeNotifier extends ChangeNotifier {
   }
 
   void addMarker(coordinate) {
-    int id = 1;
+    int id = 0;
     debugPrint(id.toString());
-    markers
-        .add(Marker(position: coordinate, markerId: MarkerId(id.toString())));
+    markers.add(
+      Marker(
+        position: coordinate,
+        markerId: MarkerId(id.toString()),
+        infoWindow: InfoWindow(
+          title: coordinate.latitude.toString() +
+              "," +
+              coordinate.longitude.toString(),
+        ),
+      ),
+    );
+    notifyListeners();
+  }
+
+  MapType toggleMapType() {
+    if (isSatelliteView) {
+      return MapType.satellite;
+    } else
+      return MapType.normal;
+  }
+
+  void toggleView() {
+    isSatelliteView = !isSatelliteView;
     notifyListeners();
   }
 }
