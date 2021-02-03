@@ -26,7 +26,6 @@ class HomeNotifier extends ChangeNotifier {
   void onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
     addMarker(_kGooglePlex.target);
-    notifyListeners();
   }
 
   void goLoc() async {
@@ -39,7 +38,6 @@ class HomeNotifier extends ChangeNotifier {
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newLatLng(coordinate));
     addMarker(coordinate);
-    notifyListeners();
   }
 
   void addMarker(coordinate) {
@@ -51,7 +49,7 @@ class HomeNotifier extends ChangeNotifier {
         markerId: MarkerId(id.toString()),
         infoWindow: InfoWindow(
           title: coordinate.latitude.toString() +
-              "," +
+              ", " +
               coordinate.longitude.toString(),
         ),
       ),
